@@ -100,7 +100,7 @@ def list_rosorun_commands():
     commands = list(filter(None, commands))
     return commands
 
-@sio.event(namespace='/conn_device')
+@sio.event(namespace='/rowma')
 def connect():
     print('connection established')
     launch_commands = list_launch_commands()
@@ -111,10 +111,10 @@ def connect():
             'rosnodes': rosnode.get_node_names(),
             'rosrun_commands': rosrun_commands
             }
-    sio.emit('register_robot', json.dumps(msg), namespace='/conn_device')
+    sio.emit('register_robot', json.dumps(msg), namespace='/rowma')
     print('Your UUID is: ' + id)
 
-@sio.on('rostopic', namespace='/conn_device')
+@sio.on('rostopic', namespace='/rowma')
 def on_message(data):
     # TODO: Separate by operation
     if data['op'] == 'subscribe':
@@ -123,7 +123,7 @@ def on_message(data):
     print(message)
     protocol.incoming(json.dumps(message))
 
-@sio.on('run_launch', namespace='/conn_device')
+@sio.on('run_launch', namespace='/rowma')
 def on_message(data):
     launch_commands = list_launch_commands()
     print(launch_commands)
@@ -138,11 +138,11 @@ def on_message(data):
             'uuid': id,
             'rosnodes': rosnode.get_node_names()
             }
-        sio.emit('update_rosnodes', json.dumps(msg), namespace='/conn_device')
+        sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
         print('run_launch')
         print(data)
 
-@sio.on('run_rosrun', namespace='/conn_device')
+@sio.on('run_rosrun', namespace='/rowma')
 def on_message(data):
     rosrun_commands = list_rosorun_commands()
     print(rosrun_commands)
@@ -158,11 +158,11 @@ def on_message(data):
             'uuid': id,
             'rosnodes': rosnode.get_node_names()
             }
-        sio.emit('update_rosnodes', json.dumps(msg), namespace='/conn_device')
+        sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
         print('run_launch')
         print(data)
 
-@sio.on('kill_rosnodes', namespace='/conn_device')
+@sio.on('kill_rosnodes', namespace='/rowma')
 def on_message(data):
     rosnode.kill_nodes(data.get('rosnodes'))
     # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
@@ -172,7 +172,7 @@ def on_message(data):
         'uuid': id,
         'rosnodes': rosnode.get_node_names()
         }
-    sio.emit('update_rosnodes', json.dumps(msg), namespace='/conn_device')
+    sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
     print('killed')
 
 @sio.event
@@ -194,7 +194,7 @@ def outgoing_func(message):
             destinations.append(subscriber['deviceUuid'])
     msg['deviceUuids'] = destinations
     msg['robotUuid'] = id
-    sio.emit('topic_from_ros', json.dumps(msg), namespace='/conn_device')
+    sio.emit('topic_from_ros', json.dumps(msg), namespace='/rowma')
 
 protocol.outgoing = outgoing_func
 
