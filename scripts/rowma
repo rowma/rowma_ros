@@ -104,7 +104,9 @@ def connect():
     print('connection established')
     launch_commands = list_launch_commands()
     rosrun_commands = list_rosorun_commands()
+    uuid = os.environ.get('UUID') or id
     msg = {
+            'uuid': uuid,
             'launch_commands': launch_commands,
             'rosnodes': rosnode.get_node_names(),
             'rosrun_commands': rosrun_commands
@@ -118,7 +120,8 @@ def connect():
 
 @sio.on('robot_registered', namespace='/rowma')
 def on_message(data):
-    id = data['uuid']
+    global id
+    id = id or data['uuid']
     print('Your UUID is: ' + id)
 
 @sio.on('err', namespace='/rowma')
