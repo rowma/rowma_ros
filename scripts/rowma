@@ -7,7 +7,6 @@ import socketio
 import requests
 import Geohash
 import subprocess as sp
-import uuid
 from rosbridge_library.rosbridge_protocol import RosbridgeProtocol
 from subprocess import Popen
 import signal
@@ -19,7 +18,7 @@ import time
 rospy.init_node('rowma')
 client_id_seed = 0
 protocol = RosbridgeProtocol(client_id_seed)
-id = str(uuid.uuid1())
+id = ''
 
 sio = socketio.Client()
 
@@ -106,13 +105,27 @@ def connect():
     launch_commands = list_launch_commands()
     rosrun_commands = list_rosorun_commands()
     msg = {
-            'uuid': id,
             'launch_commands': launch_commands,
             'rosnodes': rosnode.get_node_names(),
             'rosrun_commands': rosrun_commands
             }
+
+    api_key = os.environ.get('API_KEY')
+    if api_key:
+        msg['api_key'] = api_key
+
     sio.emit('register_robot', json.dumps(msg), namespace='/rowma')
+
+@sio.on('robot_registered', namespace='/rowma')
+def on_message(data):
+    id = data['uuid']
     print('Your UUID is: ' + id)
+
+@sio.on('err', namespace='/rowma')
+def on_message(data):
+    print(data)
+    # TODO: More smart exit
+    os._exit(1)
 
 @sio.on('rostopic', namespace='/rowma')
 def on_message(data):
@@ -159,7 +172,7 @@ def on_message(data):
             'rosnodes': rosnode.get_node_names()
             }
         sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
-        print('run_launch')
+        print('run_rosrun')
         print(data)
 
 @sio.on('kill_rosnodes', namespace='/rowma')
