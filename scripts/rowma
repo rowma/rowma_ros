@@ -5,7 +5,6 @@ import ast
 import rospy
 import socketio
 import requests
-import Geohash
 import subprocess as sp
 from rosbridge_library.rosbridge_protocol import RosbridgeProtocol
 from subprocess import Popen
