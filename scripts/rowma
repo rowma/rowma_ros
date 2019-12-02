@@ -5,7 +5,6 @@ import ast
 import rospy
 import socketio
 import requests
-import subprocess as sp
 from rosbridge_library.rosbridge_protocol import RosbridgeProtocol
 from subprocess import Popen
 import signal
