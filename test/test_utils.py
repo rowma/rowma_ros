@@ -1,7 +1,12 @@
 import pytest
 
 import sys
-sys.path.insert(1, '/home/asmsuechan/src/asmsuechan/rowma_ros/scripts')
+import os
+import inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(1, parentdir + '/scripts')
+# TODO: Need more sophisticated import
 from lib import utils
 
 def test_path_to_command():
