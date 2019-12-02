@@ -1,5 +1,6 @@
 import path
 import re
+import os
 
 # Description: Shape path to roslaunch available command.
 # @param: path <string> '/dir/package_name/launch/package.launch'
