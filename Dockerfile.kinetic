@@ -19,4 +19,4 @@ RUN source /opt/ros/kinetic/setup.bash && \
     cd /root/my_workspace && \
     catkin_make
 
-CMD ["/bin/bash", "-c", "source /root/my_workspace/devel/setup.bash && python /root/my_workspace/src/rowma_ros/test/test_utils.py"]
+CMD ["/bin/bash", "-c", "source /root/my_workspace/devel/setup.bash && python -m pytest /root/my_workspace/src/rowma_ros/test/test_utils.py"]
