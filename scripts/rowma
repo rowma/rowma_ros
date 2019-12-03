@@ -13,41 +13,27 @@ import rosnode
 import time
 
 from lib import utils
+from lib import socket_controller
 
 rospy.init_node('rowma')
 client_id_seed = 0
 protocol = RosbridgeProtocol(client_id_seed)
-id = ''
+# id = ''
 
 sio = socketio.Client()
 
-launched_nodes = []
-subscribers = []
+# launched_nodes = []
+# subscribers = []
+
+sc = socket_controller('', [], [], sio)
 
 @sio.event(namespace='/rowma')
 def connect():
-    print('connection established')
-    launch_commands = utils.list_launch_commands()
-    rosrun_commands = utils.list_rosorun_commands()
-    uuid = os.environ.get('UUID') or id
-    msg = {
-            'uuid': uuid,
-            'launch_commands': launch_commands,
-            'rosnodes': rosnode.get_node_names(),
-            'rosrun_commands': rosrun_commands
-            }
-
-    api_key = os.environ.get('API_KEY')
-    if api_key:
-        msg['api_key'] = api_key
-
-    sio.emit('register_robot', json.dumps(msg), namespace='/rowma')
+    sc.connect()
 
 @sio.on('robot_registered', namespace='/rowma')
 def on_message(data):
-    global id
-    id = id or data['uuid']
-    print('Your UUID is: ' + id)
+    sc.robot_registered(data)
 
 @sio.on('err', namespace='/rowma')
 def on_message(data):
@@ -57,64 +43,19 @@ def on_message(data):
 
 @sio.on('rostopic', namespace='/rowma')
 def on_message(data):
-    # TODO: Separate by operation
-    if data['op'] == 'subscribe':
-        subscribers.append({ 'topic': data['topic'], 'deviceUuid': data['deviceUuid'] })
-    message = ast.literal_eval(json.dumps(data))
-    print(message)
-    protocol.incoming(json.dumps(message))
+    sc.rostopic(data, protocol)
 
 @sio.on('run_launch', namespace='/rowma')
 def on_message(data):
-    launch_commands = utils.list_launch_commands()
-    print(launch_commands)
-    if data.get('command') in launch_commands:
-        cmd = 'roslaunch ' + data.get('command')
-        launched_nodes.append(Popen(cmd.split()))
-
-        # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
-        # Therefore, sleep is neccessary to wait it finishes to launch.
-        time.sleep(2)
-        msg = {
-            'uuid': id,
-            'rosnodes': rosnode.get_node_names()
-            }
-        sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
-        print('run_launch')
-        print(data)
+    sc.run_launch(data)
 
 @sio.on('run_rosrun', namespace='/rowma')
 def on_message(data):
-    rosrun_commands = utils.list_rosorun_commands()
-    print(rosrun_commands)
-    if data.get('command') in rosrun_commands:
-        cmd = 'rosrun ' + data.get('command') + ' ' + data.get('args')
-        print(cmd)
-        launched_nodes.append(Popen(cmd.split()))
-
-        # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
-        # Therefore, sleep is neccessary to wait it finishes to launch.
-        time.sleep(2)
-        msg = {
-            'uuid': id,
-            'rosnodes': rosnode.get_node_names()
-            }
-        sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
-        print('run_rosrun')
-        print(data)
+    sc.run_rosrun(data)
 
 @sio.on('kill_rosnodes', namespace='/rowma')
 def on_message(data):
-    rosnode.kill_nodes(data.get('rosnodes'))
-    # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
-    # Therefore, sleep is neccessary to wait it finishes to launch.
-    time.sleep(2)
-    msg = {
-        'uuid': id,
-        'rosnodes': rosnode.get_node_names()
-        }
-    sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
-    print('killed')
+    sc.kill_rosnodes(data)
 
 @sio.event
 def disconnect():
