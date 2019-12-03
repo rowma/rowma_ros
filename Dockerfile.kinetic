@@ -17,8 +17,6 @@ RUN source /opt/ros/kinetic/setup.bash && \
     pip2 install -r requirements.txt && \
     pip2 install path.py pytest && \
     cd /root/my_workspace && \
-    catkin_make && \
-    echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc && \
-    echo "source /root/my_workspace/devel/setup.bash" >> ~/.bashrc
+    catkin_make
 
-CMD ["python", "/root/my_workspace/src/rowma_ros/test/test_utils.py"]
+CMD ["/bin/bash", "-c", "source /root/my_workspace/devel/setup.bash && python /root/my_workspace/src/rowma_ros/test/test_utils.py"]
