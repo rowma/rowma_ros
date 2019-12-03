@@ -2,6 +2,7 @@ import os
 import ast
 import time
 import json
+import sys
 from subprocess import Popen
 import rosnode
 
@@ -34,7 +35,7 @@ class SocketController:
 
     def robot_registered(self, data):
         self.id = self.id or data['uuid']
-        print('Your UUID is: ' + id)
+        print('Your UUID is: ' + self.id)
 
     def rostopic(self, data, protocol):
         # TODO: Separate by operation
@@ -92,3 +93,20 @@ class SocketController:
             }
         self.sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
         print('killed')
+
+    def signal_handler(self):
+        self.sio.disconnect()
+        for node in self.launched_nodes:
+            node.terminate()
+        sys.exit(0)
+
+    def outgoing_func(self, message):
+        print(self.subscribers)
+        destinations = []
+        msg = json.loads(message)
+        for subscriber in self.subscribers:
+            if subscriber['topic'] == msg['topic']:
+                destinations.append(subscriber['deviceUuid'])
+        msg['deviceUuids'] = destinations
+        msg['robotUuid'] = id
+        self.sio.emit('topic_from_ros', json.dumps(msg), namespace='/rowma')

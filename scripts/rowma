@@ -25,7 +25,7 @@ sio = socketio.Client()
 # launched_nodes = []
 # subscribers = []
 
-sc = socket_controller('', [], [], sio)
+sc = socket_controller.SocketController('', [], [], sio)
 
 @sio.event(namespace='/rowma')
 def connect():
@@ -62,21 +62,10 @@ def disconnect():
     print('disconnected from server')
 
 def signal_handler(sig, frame):
-    sio.disconnect()
-    for node in launched_nodes:
-        node.terminate()
-    sys.exit(0)
+    sc.signal_handler()
 
 def outgoing_func(message):
-    print(subscribers)
-    destinations = []
-    msg = json.loads(message)
-    for subscriber in subscribers:
-        if subscriber['topic'] == msg['topic']:
-            destinations.append(subscriber['deviceUuid'])
-    msg['deviceUuids'] = destinations
-    msg['robotUuid'] = id
-    sio.emit('topic_from_ros', json.dumps(msg), namespace='/rowma')
+    sc.outgoing_func(message)
 
 protocol.outgoing = outgoing_func
 
