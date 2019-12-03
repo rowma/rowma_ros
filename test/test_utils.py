@@ -21,7 +21,7 @@ def test_path_to_rosrun_command():
 
 def test_list_launch_commands():
     launch_commands = utils.list_launch_commands()
-    assert launch_commands == ['ros_package_template ros_package_template_overlying_params.launch', 'ros_package_template ros_package_template.launch']
+    assert launch_commands == ['ros_package_template ros_package_template.launch', 'ros_package_template ros_package_template_overlying_params.launch']
 
 def test_list_rosrun_commands():
     rosrun_commands = utils.list_rosorun_commands()
