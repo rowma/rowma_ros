@@ -21,11 +21,13 @@ def test_path_to_rosrun_command():
 
 def test_list_launch_commands():
     launch_commands = utils.list_launch_commands()
-    assert launch_commands == ['ros_package_template ros_package_template.launch', 'ros_package_template ros_package_template_overlying_params.launch']
+    expected = ['ros_package_template ros_package_template.launch', 'ros_package_template ros_package_template_overlying_params.launch']
+    assert launch_commands.sort() == expected.sort()
 
 def test_list_rosrun_commands():
     rosrun_commands = utils.list_rosorun_commands()
-    assert rosrun_commands == ['rowma_ros rowma', 'ros_package_template ros_package_template']
+    expected = ['rowma_ros rowma', 'ros_package_template ros_package_template']
+    assert rosrun_commands.sort() == expected.sort()
 
 if __name__ == '__main__':
     pytest.main(['-v', __file__])
