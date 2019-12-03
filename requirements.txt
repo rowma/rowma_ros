@@ -4,7 +4,7 @@ future==0.17.1
 get==2019.4.13
 mock==3.0.3
 pathtools==0.1.2
-path.py==12.4.0
+path.py==11.5.2
 Pillow==5.2.0
 post==2019.4.13
 python-dateutil==2.8.0
