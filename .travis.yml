@@ -7,9 +7,9 @@ jobs:
   include:
     - stage: test
       before_install:
-        - docker build -t rowma_ros_kinetic_test -f Dockerfile.kinetic .
+        - docker build -t rowma_ros_kinetic_test -f Dockerfile.test.kinetic .
       script: docker run --rm -it rowma_ros_kinetic_test
     - # stage name not required, will continue to use `test`
       before_install:
-        - docker build -t rowma_ros_melodic_test -f Dockerfile.melodic .
+        - docker build -t rowma_ros_melodic_test -f Dockerfile.test.melodic .
       script: docker run --rm -it rowma_ros_melodic_test

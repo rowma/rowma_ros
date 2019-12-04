@@ -9,13 +9,26 @@ Check [the rowma main repository](https://github.com/asmsuechan/rowma) for more 
 
 ## Requirements
 
+## Usage
+
+```sh
+rosrun rowma_ros rowma
+ROWMA_SERVER_URL=http://localhost rosrun rowma_ros rowma
+```
 
 ## Testing
 This ros package is tested on docker images because some functions in `lib.utils` depend on ROS related directory especially `ROS_PACKAGE_PATH`. (`Docker >= 18.09.6`)
 
-```
-docker build -t rowma_ros_melodic_test -f Dockerfile.kinetic .
-docker build -t rowma_ros_melodic_test -f Dockerfile.melodic .
+```sh
+docker build -t rowma_ros_melodic_test -f Dockerfile.test.kinetic .
+docker build -t rowma_ros_melodic_test -f Dockerfile.test.melodic .
 docker run --rm -v `pwd`:/root/my_workspace/src/rowma_ros -it rowma_ros_kinetic_test
 docker run --rm -v `pwd`:/root/my_workspace/src/rowma_ros -it rowma_ros_melodic_test
+```
+
+## Development
+```sh
+# using Docker
+docker build -t rowma_ros -f Dockerfile .
+docker run --rm --network="host" -e ROWMA_SERVER_URL=http://127.0.0.1 -it rowma_ros
 ```
