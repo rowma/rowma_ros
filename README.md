@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.com/asmsuechan/rowma_ros.svg?branch=master)](https://travis-ci.com/asmsuechan/rowma_ros)
 
 ## About
-This package **does not** Publish/Subscribe any rostopics. This package is responsible for **WebSocket** connection and is a WebSocket client to operate a ros-based robot.
+This package is responsible for **WebSocket** connection and is a WebSocket client to operate a ros-based robot.
 
 ### rowma repository
 Check [the rowma main repository](https://github.com/asmsuechan/rowma) for more information to utilize rowma.
