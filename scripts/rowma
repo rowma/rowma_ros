@@ -16,33 +16,39 @@ sio = socketio.Client()
 
 sc = socket_controller.SocketController('', [], [], sio)
 
-@sio.event(namespace='/rowma')
+if os.environ.get('API_KEY'):
+    ns = '/rowma_ros'
+else:
+    ns = '/rowma'
+
+@sio.event(namespace=ns)
 def connect():
+    print(ns)
     sc.connect()
 
-@sio.on('robot_registered', namespace='/rowma')
+@sio.on('robot_registered', namespace=ns)
 def on_message(data):
     sc.robot_registered(data)
 
-@sio.on('err', namespace='/rowma')
+@sio.on('err', namespace=ns)
 def on_message(data):
     print(data)
     # TODO: More smart exit
     os._exit(1)
 
-@sio.on('rostopic', namespace='/rowma')
+@sio.on('rostopic', namespace=ns)
 def on_message(data):
     sc.rostopic(data, protocol)
 
-@sio.on('run_launch', namespace='/rowma')
+@sio.on('run_launch', namespace=ns)
 def on_message(data):
     sc.run_launch(data)
 
-@sio.on('run_rosrun', namespace='/rowma')
+@sio.on('run_rosrun', namespace=ns)
 def on_message(data):
     sc.run_rosrun(data)
 
-@sio.on('kill_rosnodes', namespace='/rowma')
+@sio.on('kill_rosnodes', namespace=ns)
 def on_message(data):
     sc.kill_rosnodes(data)
 
