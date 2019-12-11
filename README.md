@@ -1,6 +1,10 @@
 # rowma ROS
 [![Build Status](https://travis-ci.com/asmsuechan/rowma_ros.svg?branch=master)](https://travis-ci.com/asmsuechan/rowma_ros)
 
+<p align="center">
+  <img width="460" src="/logo.png">
+</p>
+
 ## About
 This package is responsible for **WebSocket** connection and is a WebSocket client to operate a ros-based robot.
 
