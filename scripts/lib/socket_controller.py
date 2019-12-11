@@ -9,11 +9,12 @@ import rosnode
 from lib import utils
 
 class SocketController:
-    def __init__(self, id, launched_nodes, subscribers, sio):
+    def __init__(self, id, launched_nodes, subscribers, sio, nms):
         self.id = id
         self.launched_nodes = launched_nodes
         self.subscribers = subscribers
         self.sio = sio
+        self.nms = nms
 
     def connect(self):
         print('connection established')
@@ -31,7 +32,7 @@ class SocketController:
         if api_key:
             msg['api_key'] = api_key
 
-        self.sio.emit('register_robot', json.dumps(msg), namespace='/rowma')
+        self.sio.emit('register_robot', json.dumps(msg), namespace=self.nms)
 
     def robot_registered(self, data):
         self.id = self.id or data['uuid']
@@ -59,7 +60,7 @@ class SocketController:
                 'uuid': id,
                 'rosnodes': rosnode.get_node_names()
                 }
-            self.sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
+            self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
             print('run_launch')
             print(data)
 
@@ -78,7 +79,7 @@ class SocketController:
     	        'uuid': id,
     	        'rosnodes': rosnode.get_node_names()
     	        }
-    	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
+    	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
     	    print('run_rosrun')
     	    print(data)
 
@@ -91,7 +92,7 @@ class SocketController:
             'uuid': id,
             'rosnodes': rosnode.get_node_names()
             }
-        self.sio.emit('update_rosnodes', json.dumps(msg), namespace='/rowma')
+        self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
         print('killed')
 
     def signal_handler(self):
@@ -109,4 +110,4 @@ class SocketController:
                 destinations.append(subscriber['deviceUuid'])
         msg['deviceUuids'] = destinations
         msg['robotUuid'] = id
-        self.sio.emit('topic_from_ros', json.dumps(msg), namespace='/rowma')
+        self.sio.emit('topic_from_ros', json.dumps(msg), namespace=self.nms)

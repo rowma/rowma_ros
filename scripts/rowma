@@ -14,41 +14,42 @@ protocol = RosbridgeProtocol(client_id_seed)
 
 sio = socketio.Client()
 
-sc = socket_controller.SocketController('', [], [], sio)
-
 if os.environ.get('API_KEY'):
-    ns = '/rowma_ros'
+    nms = '/rowma_robot'
 else:
-    ns = '/rowma'
+    nms = '/rowma'
 
-@sio.event(namespace=ns)
+sc = socket_controller.SocketController('', [], [], sio, nms)
+
+@sio.event(namespace=nms)
 def connect():
-    print(ns)
+    print(nms)
     sc.connect()
 
-@sio.on('robot_registered', namespace=ns)
+@sio.on('robot_registered', namespace=nms)
 def on_message(data):
     sc.robot_registered(data)
 
-@sio.on('err', namespace=ns)
+@sio.on('err', namespace=nms)
 def on_message(data):
     print(data)
     # TODO: More smart exit
     os._exit(1)
 
-@sio.on('rostopic', namespace=ns)
+@sio.on('rostopic', namespace=nms)
 def on_message(data):
+    print(data)
     sc.rostopic(data, protocol)
 
-@sio.on('run_launch', namespace=ns)
+@sio.on('run_launch', namespace=nms)
 def on_message(data):
     sc.run_launch(data)
 
-@sio.on('run_rosrun', namespace=ns)
+@sio.on('run_rosrun', namespace=nms)
 def on_message(data):
     sc.run_rosrun(data)
 
-@sio.on('kill_rosnodes', namespace=ns)
+@sio.on('kill_rosnodes', namespace=nms)
 def on_message(data):
     sc.kill_rosnodes(data)
 

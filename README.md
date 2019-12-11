@@ -63,3 +63,6 @@ docker run --rm -v `pwd`:/root/my_workspace/src/rowma_ros -it rowma_ros_melodic_
 docker build -t rowma_ros -f Dockerfile .
 docker run --rm --network="host" -e ROWMA_SERVER_URL=http://127.0.0.1 -it rowma_ros
 ```
+## TODO
+* versioning
+* more tests
