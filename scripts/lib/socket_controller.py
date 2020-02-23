@@ -41,9 +41,9 @@ class SocketController:
     def rostopic(self, data, protocol):
         # TODO: Separate by operation
         if data['op'] == 'subscribe':
-            self.subscribers = self.subscribers.append({ 'topic': data['topic'], 'destUuid': data['topicDestination']['uuid'] })
+            newSubscriber = { 'topic': data['topic'], 'destination': data['topicDestination'] }
+            self.subscribers.append(newSubscriber)
         message = ast.literal_eval(json.dumps(data))
-        # print(data)
         protocol.incoming(json.dumps(message))
 
     def run_launch(self, data):
@@ -104,12 +104,11 @@ class SocketController:
         sys.exit(0)
 
     def outgoing_func(self, message):
-        print(self.subscribers)
         destinations = []
         msg = json.loads(message)
         for subscriber in self.subscribers:
             if subscriber['topic'] == msg['topic']:
-                destinations.append(subscriber['destUuid'])
-        msg['destUuids'] = destinations
+                destination = subscriber['destination']
+        msg['topicDestination'] = destination
         msg['sourceUuid'] = self.id
         self.sio.emit('topic_from_ros', json.dumps(msg), namespace=self.nms)
