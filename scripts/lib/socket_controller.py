@@ -43,7 +43,7 @@ class SocketController:
         if data['op'] == 'subscribe':
             self.subscribers = self.subscribers.append({ 'topic': data['topic'], 'deviceUuid': data['deviceUuid'] })
         message = ast.literal_eval(json.dumps(data))
-        print(message)
+        # print(message)
         protocol.incoming(json.dumps(message))
 
     def run_launch(self, data):
@@ -51,13 +51,15 @@ class SocketController:
         print(launch_commands)
         if data.get('command') in launch_commands:
             cmd = 'roslaunch ' + data.get('command')
+            if self.launched_nodes == None:
+                self.launched_nodes =[]
             self.launched_nodes = self.launched_nodes.append(Popen(cmd.split()))
 
             # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
             # Therefore, sleep is neccessary to wait it finishes to launch.
             time.sleep(2)
             msg = {
-                'uuid': id,
+                'uuid': self.id,
                 'rosnodes': rosnode.get_node_names()
                 }
             self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
@@ -70,13 +72,13 @@ class SocketController:
     	if data.get('command') in rosrun_commands:
     	    cmd = 'rosrun ' + data.get('command') + ' ' + data.get('args')
     	    print(cmd)
-    	    self.launched_nodes = self.launched_nodes.append(Popen(cmd.split()))
+    	    self.launched_nodes = self.launched_nodes.append(Popen(cmd.split()) or [])
 
     	    # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
     	    # Therefore, sleep is neccessary to wait it finishes to launch.
     	    time.sleep(2)
     	    msg = {
-    	        'uuid': id,
+    	        'uuid': self.id,
     	        'rosnodes': rosnode.get_node_names()
     	        }
     	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
@@ -89,7 +91,7 @@ class SocketController:
         # Therefore, sleep is neccessary to wait it finishes to launch.
         time.sleep(2)
         msg = {
-            'uuid': id,
+            'uuid': self.id,
             'rosnodes': rosnode.get_node_names()
             }
         self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
@@ -109,5 +111,5 @@ class SocketController:
             if subscriber['topic'] == msg['topic']:
                 destinations.append(subscriber['deviceUuid'])
         msg['deviceUuids'] = destinations
-        msg['robotUuid'] = id
+        msg['robotUuid'] = self.id
         self.sio.emit('topic_from_ros', json.dumps(msg), namespace=self.nms)
