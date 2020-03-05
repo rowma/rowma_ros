@@ -5,6 +5,7 @@ import json
 import sys
 from subprocess import Popen
 import rosnode
+import rospkg
 
 from lib import utils
 
@@ -18,6 +19,11 @@ class SocketController:
 
     def connect(self):
         print('connection established')
+        ros_root = rospkg.get_ros_root()
+        r = rospkg.RosPack()
+        manifest = r.get_manifest('rowma_ros')
+        rowma_ros_version = manifest.version
+
         launch_commands = utils.list_launch_commands()
         rosrun_commands = utils.list_rosorun_commands()
         uuid = os.environ.get('UUID') or self.id
@@ -25,7 +31,8 @@ class SocketController:
                 'uuid': uuid,
                 'launch_commands': launch_commands,
                 'rosnodes': rosnode.get_node_names(),
-                'rosrun_commands': rosrun_commands
+                'rosrun_commands': rosrun_commands,
+                'rowma_ros_version': rowma_ros_version
                 }
 
         api_key = os.environ.get('API_KEY')
