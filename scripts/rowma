@@ -65,7 +65,7 @@ def outgoing_func(message):
 
 protocol.outgoing = outgoing_func
 
-server_url = os.environ.get('ROWMA_SERVER_URL') or 'http://18.176.1.219'
+server_url = os.environ.get('ROWMA_SERVER_URL') or 'https://rocky-peak-54058.herokuapp.com'
 sio.connect(server_url)
 signal.signal(signal.SIGINT, signal_handler)
 signal.pause()
