@@ -76,3 +76,7 @@ def list_rosorun_commands():
 
     commands = list(filter(None, commands))
     return commands
+
+def list_rostopics():
+    rostopics = sp.check_output("rostopic list", shell=True).decode('utf-8').strip().split('\n')
+    return rostopics

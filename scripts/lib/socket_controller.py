@@ -25,13 +25,15 @@ class SocketController:
 
         launch_commands = utils.list_launch_commands()
         rosrun_commands = utils.list_rosorun_commands()
+        rostopics = utils.list_rostopics()
         uuid = os.environ.get('UUID') or self.id
         msg = {
                 'uuid': uuid,
                 'launch_commands': launch_commands,
                 'rosnodes': rosnode.get_node_names(),
                 'rosrun_commands': rosrun_commands,
-                'rowma_ros_version': rowma_ros_version
+                'rowma_ros_version': rowma_ros_version,
+                'rostopics': rostopics
                 }
 
         api_key = os.environ.get('API_KEY')
