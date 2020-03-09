@@ -65,7 +65,8 @@ class SocketController:
             time.sleep(2)
             msg = {
                 'uuid': self.id,
-                'rosnodes': rosnode.get_node_names()
+                'rosnodes': rosnode.get_node_names(),
+                'rostopics': utils.list_rostopics()
                 }
             self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
             print('run_launch')
@@ -81,7 +82,8 @@ class SocketController:
     	    time.sleep(2)
     	    msg = {
     	        'uuid': self.id,
-    	        'rosnodes': rosnode.get_node_names()
+    	        'rosnodes': rosnode.get_node_names(),
+                'rostopics': utils.list_rostopics()
     	        }
     	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
 
@@ -92,7 +94,8 @@ class SocketController:
         time.sleep(2)
         msg = {
             'uuid': self.id,
-            'rosnodes': rosnode.get_node_names()
+            'rosnodes': rosnode.get_node_names(),
+            'rostopics': utils.list_rostopics()
             }
         self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
         print('killed')
