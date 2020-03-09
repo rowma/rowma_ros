@@ -10,9 +10,8 @@ import rospkg
 from lib import utils
 
 class SocketController:
-    def __init__(self, id, launched_nodes, subscribers, sio, nms):
+    def __init__(self, id, subscribers, sio, nms):
         self.id = id
-        self.launched_nodes = launched_nodes
         self.subscribers = subscribers
         self.sio = sio
         self.nms = nms
@@ -55,12 +54,9 @@ class SocketController:
 
     def run_launch(self, data):
         launch_commands = utils.list_launch_commands()
-        print(launch_commands)
         if data.get('command') in launch_commands:
             cmd = 'roslaunch ' + data.get('command')
-            if self.launched_nodes == None:
-                self.launched_nodes =[]
-            self.launched_nodes = self.launched_nodes.append(Popen(cmd.split()))
+            Popen(cmd.split())
 
             # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
             # Therefore, sleep is neccessary to wait it finishes to launch.
@@ -71,15 +67,12 @@ class SocketController:
                 }
             self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
             print('run_launch')
-            print(data)
 
     def run_rosrun(self, data):
     	rosrun_commands = utils.list_rosorun_commands()
-    	print(rosrun_commands)
     	if data.get('command') in rosrun_commands:
     	    cmd = 'rosrun ' + data.get('command') + ' ' + data.get('args')
-    	    print(cmd)
-    	    self.launched_nodes = self.launched_nodes.append(Popen(cmd.split()) or [])
+            Popen(cmd.split())
 
     	    # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
     	    # Therefore, sleep is neccessary to wait it finishes to launch.
@@ -89,8 +82,6 @@ class SocketController:
     	        'rosnodes': rosnode.get_node_names()
     	        }
     	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
-    	    print('run_rosrun')
-    	    print(data)
 
     def kill_rosnodes(self, data):
         rosnode.kill_nodes(data.get('rosnodes'))
@@ -106,8 +97,6 @@ class SocketController:
 
     def signal_handler(self):
         self.sio.disconnect()
-        for node in self.launched_nodes:
-            node.terminate()
         sys.exit(0)
 
     def outgoing_func(self, message):

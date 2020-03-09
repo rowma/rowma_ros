@@ -19,11 +19,10 @@ if os.environ.get('API_KEY'):
 else:
     nms = '/rowma'
 
-sc = socket_controller.SocketController('', [], [], sio, nms)
+sc = socket_controller.SocketController('', [], sio, nms)
 
 @sio.event(namespace=nms)
 def connect():
-    print(nms)
     sc.connect()
 
 @sio.on('robot_registered', namespace=nms)
