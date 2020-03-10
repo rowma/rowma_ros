@@ -52,6 +52,10 @@ def on_message(data):
 def on_message(data):
     sc.kill_rosnodes(data)
 
+@sio.on('unsubscribe_rostopic', namespace=nms)
+def on_message(data):
+    sc.unsubscribe_rostopic(data)
+
 @sio.event
 def disconnect():
     print('disconnected from server')

@@ -100,11 +100,24 @@ class SocketController:
         self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
         print('killed')
 
+    def unsubscribe_rostopic(self, data):
+        print(data)
+        self.subscribers = list(filter(lambda s: s['topic'] != data.get('topic'), self.subscribers))
+        print(self.subscribers)
+    	msg = {
+    	    'uuid': self.id,
+    	    'rosnodes': rosnode.get_node_names(),
+            'rostopics': utils.list_rostopics()
+    	    }
+    	self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
+
     def signal_handler(self):
         self.sio.disconnect()
         sys.exit(0)
 
     def outgoing_func(self, message):
+        if len(self.subscribers) == 0:
+            return
         destinations = []
         msg = json.loads(message)
         for subscriber in self.subscribers:
