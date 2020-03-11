@@ -123,6 +123,8 @@ class SocketController:
         for subscriber in self.subscribers:
             if subscriber['topic'] == msg['topic']:
                 destination = subscriber['destination']
-        msg['topicDestination'] = destination
-        msg['sourceUuid'] = self.id
-        self.sio.emit('topic_from_ros', json.dumps(msg), namespace=self.nms)
+
+        if destination:
+            msg['topicDestination'] = destination
+            msg['sourceUuid'] = self.id
+            self.sio.emit('topic_from_ros', json.dumps(msg), namespace=self.nms)
