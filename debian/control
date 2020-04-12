@@ -1,0 +1,12 @@
+Source: ros-melodic-rowma-ros
+Section: misc
+Priority: optional
+Maintainer: asmsuechan <suenagaryoutaabc@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), ros-melodic-catkin, ros-melodic-roscpp, ros-melodic-rospy, ros-melodic-std-msgs
+Homepage: https://github.com/rowma/rowma
+Standards-Version: 3.9.2
+
+Package: ros-melodic-rowma-ros
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-melodic-roscpp, ros-melodic-rospy, ros-melodic-std-msgs
+Description: The rowma_ros package
