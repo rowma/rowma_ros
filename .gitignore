@@ -1,3 +1,8 @@
 .pytest_cache/
 __pycache__
 *.pyc
+build/
+devel/
+install/
+logs/
+.catkin_tools/
