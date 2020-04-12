@@ -5,14 +5,37 @@ from rosbridge_library.rosbridge_protocol import RosbridgeProtocol
 import signal
 import os
 
+from lib import logging_handler
+import logging
+
+if os.environ.get('ROWMA_DEBUG'):
+    log_level = logging.DEBUG
+    rospy_log_level = rospy.DEBUG
+else:
+    log_level = logging.ERROR
+    rospy_log_level = rospy.ERROR
+
+logging.basicConfig(level=log_level)
+logger = logging.getLogger(__name__)
+logger.setLevel(log_level)
+logging.getLogger(__name__).addHandler(logging_handler.ConnectPythonLoggingToROS())
+logging.getLogger(__name__).setLevel(log_level)
+
 from lib import utils
 from lib import socket_controller
 
-rospy.init_node('rowma')
+rospy.init_node('rowma', log_level=rospy_log_level)
 client_id_seed = 0
 protocol = RosbridgeProtocol(client_id_seed)
 
-sio = socketio.Client()
+sio = socketio.Client(
+    reconnection=True,
+    reconnection_attempts=0,
+    reconnection_delay=1,
+    reconnection_delay_max=30,
+    logger=logger,
+    engineio_logger=logger
+)
 
 if os.environ.get('API_KEY'):
     nms = '/rowma_robot'
@@ -24,6 +47,7 @@ sc = socket_controller.SocketController('', [], sio, nms)
 @sio.event(namespace=nms)
 def connect():
     sc.connect()
+    sc.set_reconnection(False)
 
 @sio.on('robot_registered', namespace=nms)
 def on_message(data):
@@ -56,9 +80,9 @@ def on_message(data):
 def on_message(data):
     sc.unsubscribe_rostopic(data)
 
-@sio.event
+@sio.event(namespace=nms)
 def disconnect():
-    print('disconnected from server')
+    sc.set_reconnection(True)
 
 def signal_handler(sig, frame):
     sc.signal_handler()

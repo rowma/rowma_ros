@@ -15,9 +15,9 @@ class SocketController:
         self.subscribers = subscribers
         self.sio = sio
         self.nms = nms
+        self.reconnection = False
 
     def connect(self):
-        print('connection established')
         ros_root = rospkg.get_ros_root()
         r = rospkg.RosPack()
         manifest = r.get_manifest('rowma_ros')
@@ -33,7 +33,8 @@ class SocketController:
                 'rosnodes': rosnode.get_node_names(),
                 'rosrun_commands': rosrun_commands,
                 'rowma_ros_version': rowma_ros_version,
-                'rostopics': rostopics
+                'rostopics': rostopics,
+                'reconnection': self.reconnection
                 }
 
         api_key = os.environ.get('API_KEY')
@@ -41,6 +42,7 @@ class SocketController:
             msg['api_key'] = api_key
 
         self.sio.emit('register_robot', json.dumps(msg), namespace=self.nms)
+        print('connection established')
 
     def robot_registered(self, data):
         self.id = self.id or data['uuid']
@@ -128,3 +130,6 @@ class SocketController:
             msg['topicDestination'] = destination
             msg['sourceUuid'] = self.id
             self.sio.emit('topic_from_ros', json.dumps(msg), namespace=self.nms)
+
+    def set_reconnection(self, reconnection):
+        self.reconnection = reconnection
