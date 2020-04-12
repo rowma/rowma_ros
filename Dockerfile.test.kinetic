@@ -4,11 +4,14 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main"
     apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116 && \
     apt-get update && \
     apt-get install python2.7 python-pip python3-pip python-rospy ros-kinetic-rosbridge-server -y && \
-    pip install --upgrade pip && \
-    apt-get remove cmake -y && \
-    pip install cmake --upgrade
+    pip install --upgrade pip
 
 COPY . /root/my_workspace/src/rowma_ros
+
+ADD https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.sh /cmake-3.10.3-Linux-x86_64.sh
+RUN mkdir /opt/cmake \
+  && sh /cmake-3.10.3-Linux-x86_64.sh --prefix=/opt/cmake --skip-license \
+  && ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
 
 SHELL ["/bin/bash", "-c"]
 RUN source /opt/ros/kinetic/setup.bash && \
