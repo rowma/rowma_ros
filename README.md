@@ -1,3 +1,26 @@
+## rowma_ros (kinetic) - 0.0.2-3
+
+The packages in the `rowma_ros` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release --rosdistro kinetic --track kinetic rowma_ros` on `Sun, 12 Apr 2020 13:35:55 -0000`
+
+The `rowma_ros` package was released.
+
+Version of package(s) in repository `rowma_ros`:
+
+- upstream repository: https://github.com/rowma/rowma_ros
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `0.0.2-2`
+- new version: `0.0.2-3`
+
+Versions of tools used:
+
+- bloom version: `0.9.3`
+- catkin_pkg version: `0.4.16`
+- rosdep version: `0.18.0`
+- rosdistro version: `0.8.0`
+- vcstools version: `0.1.42`
+
+
 ## rowma_ros (melodic) - 0.0.2-1
 
 The packages in the `rowma_ros` repository were released into the `melodic` distro by running `/usr/bin/bloom-release --rosdistro melodic --track melodic rowma_ros` on `Sun, 12 Apr 2020 12:41:08 -0000`
