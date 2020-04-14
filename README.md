@@ -43,10 +43,20 @@ You can run your own rowma server (its name is `rowma_connection_server`) to avo
 In addition, specify the server address by `ROWMA_SERVER_URL` when you run the node.
 
 ```sh
-ROWMA_SERVER_URL=http://localhost rosrun rowma_ros rowma
+ROWMA_SERVER_URL=http://localhost:3000 rosrun rowma_ros rowma
 ```
 
 For more information about ConnectionManager, check [the repository](https://github.com/rowma/rowma).
+
+## Options
+There are some options that can be specified at `rosrun`.
+
+|name|value|description|
+|:-|:-|:-|
+|ROWMA_DEBUG|boolean|Debug logs are shown if you set this value as True.|
+|API_KEY|string|API_KEY can be specified for authentication. This value is used along with an authenticator server specified by ROWMA_SERVER_URL.|
+|ROWMA_SERVER_URL|string|This value describes ConnectionManager URL. The default value is https://rocky-peak-54058.herokuapp.com.|
+|UUID|string|You can use an arbitrary UUID by using this variable.|
 
 ## Testing
 This ros package is tested on docker images because some functions in `lib.utils` depend on ROS related directory especially `ROS_PACKAGE_PATH`. (`Docker >= 18.09.6`)
