@@ -71,11 +71,11 @@ def clone(install_path):
     return subprocess.check_call(["git"] + list(clone_args))
 
 def pip_install(install_path):
-    pip_args = ["install", "-r", install_path + "/requirements.txt"]
+    pip_args = ["install", "-r", install_path + "/rowma_ros/requirements.txt"]
     return subprocess.check_call(["pip"] + list(pip_args))
 
 def catkin_make(install_path):
-    return subprocess.check_call(["catkin_make"])
+    return subprocess.check_call(["cd", install_path, "&&", "catkin_make"])
 
 def install():
     try:
