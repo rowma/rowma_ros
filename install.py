@@ -65,14 +65,14 @@ def workspace_path():
     return workspace_path
 
 def clone(workspace_path):
-    rowma_ros_path = os.path.join(workspace_path, "/rowma_ros")
+    rowma_ros_path = os.path.join(workspace_path, "rowma_ros")
     if os.path.exists(rowma_ros_path):
         exit_error("You already have rowma_ros package, aborted.")
     clone_args = ["clone", "https://github.com/rowma/rowma_ros.git", rowma_ros_path]
     return subprocess.check_call(["git"] + list(clone_args))
 
 def pip_install(workspace_path):
-    requirements_txt_pat = os.path.join(workspace_path, "/rowma_ros/requirements.txt")
+    requirements_txt_pat = os.path.join(workspace_path, "rowma_ros/requirements.txt")
     pip_args = ["install", "-r", requirements_txt_pat]
     return subprocess.check_call(["pip"] + list(pip_args))
 
@@ -85,7 +85,7 @@ def install_apt_deps():
     return subprocess.check_call(["sudo", "apt-get", "install", "ros-" + distro + "-rosbridge-server"])
 
 def catkin_make(workspace_path):
-    working_dir = os.path.join(workspace_path, "/..")
+    working_dir = os.path.join(workspace_path, "..")
     return subprocess.check_call(["catkin_make"], shell=True, cwd=working_dir)
 
 def install():
