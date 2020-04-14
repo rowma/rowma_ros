@@ -67,7 +67,7 @@ def install_path():
 def clone(install_path):
     if os.path.exists(install_path + "/rowma_ros"):
         exit_error("You already have rowma_ros package, aborted.")
-    clone_args = ["clone", "https://github.com/rowma/rowma_ros.git", install_path]
+    clone_args = ["clone", "https://github.com/rowma/rowma_ros.git", install_path + "/rowma_ros"]
     return subprocess.check_call(["git"] + list(clone_args))
 
 def pip_install(install_path):
