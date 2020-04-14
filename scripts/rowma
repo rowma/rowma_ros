@@ -92,7 +92,7 @@ def outgoing_func(message):
 
 protocol.outgoing = outgoing_func
 
-server_url = os.environ.get('ROWMA_SERVER_URL') or 'https://rocky-peak-54058.herokuapp.com'
+server_url = os.environ.get('ROWMA_SERVER_URL') or 'https://rowma.moriokalab.com'
 sio.connect(server_url)
 signal.signal(signal.SIGINT, signal_handler)
 signal.pause()
