@@ -75,7 +75,7 @@ def pip_install(install_path):
     return subprocess.check_call(["pip"] + list(pip_args))
 
 def catkin_make(install_path):
-    return subprocess.check_call(["cd", install_path, "&&", "catkin_make"])
+    return subprocess.check_call(["catkin_make"], shell=True, cwd=install_path + "/..")
 
 def install():
     try:
