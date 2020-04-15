@@ -42,11 +42,11 @@ class SocketController:
             msg['api_key'] = api_key
 
         self.sio.emit('register_robot', json.dumps(msg), namespace=self.nms)
-        print('connection established')
+        utils.print_success('connection established')
 
     def robot_registered(self, data):
         self.id = self.id or data['uuid']
-        print('Your UUID is: ' + self.id)
+        utils.print_success('Your UUID is: ' + self.id)
 
     def rostopic(self, data, protocol):
         # TODO: Separate by operation
@@ -71,7 +71,6 @@ class SocketController:
                 'rostopics': utils.list_rostopics()
                 }
             self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
-            print('run_launch')
 
     def run_rosrun(self, data):
     	rosrun_commands = utils.list_rosorun_commands()
@@ -103,9 +102,8 @@ class SocketController:
         print('killed')
 
     def unsubscribe_rostopic(self, data):
-        print(data)
+        utils.print_debug(data)
         self.subscribers = list(filter(lambda s: s['topic'] != data.get('topic'), self.subscribers))
-        print(self.subscribers)
     	msg = {
     	    'uuid': self.id,
     	    'rosnodes': rosnode.get_node_names(),
