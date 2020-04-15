@@ -37,11 +37,12 @@ def path_to_rosrun_command(path):
 # Description: Get package commands list located at ROS_PACKAGE_PATH environment variable
 # output: commands Array<string> ['package_name package.launch']
 def list_launch_commands():
-    ros_package_path = os.environ['ROS_PACKAGE_PATH']
-    paths = ros_package_path.split(':')
+    try:
+        ros_package_path = os.environ['ROS_PACKAGE_PATH']
+    except KeyError:
+        exit_error('Set ROS_PACKAGE_PATH correctly')
 
-    if len(paths) < 1:
-        sys.exit('Set ROS_PACKAGE_PATH correctly')
+    paths = ros_package_path.split(':')
 
     packages = []
     for path in paths:
@@ -55,11 +56,12 @@ def list_launch_commands():
     return commands
 
 def list_rosorun_commands():
-    ros_package_path = os.environ['ROS_PACKAGE_PATH']
-    paths = ros_package_path.split(':')
+    try:
+        ros_package_path = os.environ['ROS_PACKAGE_PATH']
+    except KeyError:
+        exit_error('Set ROS_PACKAGE_PATH correctly')
 
-    if len(paths) < 1:
-        sys.exit('Set ROS_PACKAGE_PATH correctly')
+    paths = ros_package_path.split(':')
 
     packages = []
     for path in paths:
@@ -99,3 +101,6 @@ def print_success(msg):
 
 def print_debug(msg):
     print(bcolors.HEADER + msg + bcolors.ENDC)
+
+def exit_error(err_msg):
+    sys.exit(bcolors.FAIL + err_msg + bcolors.ENDC)
