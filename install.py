@@ -26,6 +26,9 @@ def exit_error(err_msg):
 def print_success(msg):
     print(bcolors.OKGREEN + msg + bcolors.ENDC)
 
+def print_warning(msg):
+    print(bcolors.WARNING+ msg + bcolors.ENDC)
+
 def get_ros_package_path():
     try:
         ros_package_path = os.environ['ROS_PACKAGE_PATH']
@@ -64,12 +67,21 @@ def workspace_path():
         exit_error("You have to specify 1 install path, aborted.")
     return workspace_path
 
+def _clone_into(clone_path):
+    clone_args = ["clone", "https://github.com/rowma/rowma_ros.git", clone_path]
+    return subprocess.check_call(["git"] + list(clone_args))
+
 def clone(workspace_path):
     rowma_ros_path = os.path.join(workspace_path, "rowma_ros")
     if os.path.exists(rowma_ros_path):
-        exit_error("You already have rowma_ros package, aborted.")
-    clone_args = ["clone", "https://github.com/rowma/rowma_ros.git", rowma_ros_path]
-    return subprocess.check_call(["git"] + list(clone_args))
+        clone_confirmation = input_function("rowma_ros already exists, do you override it?" + bcolors.WARNING + "\"" + path[0]  + "\""+ bcolors.ENDC + " [y/N] ") or "N"
+        if clone_confirmation == "y":
+            _clone_into("/tmp/rowma_ros")
+            subprocess.check_call(["mv", "-f", "/tmp/rowma_ros", rowma_ros_path])
+        else:
+            print_warning("Skipped git clone rowma_ros.")
+    else:
+        _clone_into(workspace_path)
 
 def pip_install(workspace_path):
     requirements_txt_pat = os.path.join(workspace_path, "rowma_ros/requirements.txt")
