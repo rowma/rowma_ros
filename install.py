@@ -74,7 +74,7 @@ def _clone_into(clone_path):
 def clone(workspace_path):
     rowma_ros_path = os.path.join(workspace_path, "rowma_ros")
     if os.path.exists(rowma_ros_path):
-        clone_confirmation = input_function("rowma_ros already exists, do you override it?" + bcolors.WARNING + "\"" + path[0]  + "\""+ bcolors.ENDC + " [y/N] ") or "N"
+        clone_confirmation = input_function("rowma_ros already exists, do you override it? [y/N] ") or "N"
         if clone_confirmation == "y":
             _clone_into("/tmp/rowma_ros")
             subprocess.check_call(["mv", "-f", "/tmp/rowma_ros", rowma_ros_path])
