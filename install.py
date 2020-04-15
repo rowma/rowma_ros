@@ -81,7 +81,7 @@ def clone(workspace_path):
         else:
             print_warning("Skipped git clone rowma_ros.")
     else:
-        _clone_into(workspace_path)
+        _clone_into(rowma_ros_path)
 
 def pip_install(workspace_path):
     requirements_txt_pat = os.path.join(workspace_path, "rowma_ros/requirements.txt")
