@@ -34,28 +34,20 @@ catkin_make
 ```
 
 ## Usage
-Just run `rosrun rowma_ros rowma` and you will get UUID when it successfully connects to the rowma server. You can specify your own rowma server though, the default rowma server is provided at `18.176.1.219`.
+Just run `rosrun rowma_ros rowma` and you will get UUID when it successfully connects to the rowma server.
 
 ```
 rosrun rowma_ros rowma
 ```
 
-### default server
-The default rowma server is provided at `18.176.1.219` as explained above. It is a **public server** without any auth, therefore you should be careful to connect your robot because anyone can run your robot easily. I recommend you to use the default server for experiments.
-
-### your own rowma server
-You can run your own rowma server (its name is `rowma_connection_server`) to avoid connecting your robot to the public server ([official document](https://rowma.github.io/documentation/en/host-your-network)).
-
-In addition, specify the server address by `ROWMA_SERVER_URL` when you run the node.
-
-```sh
-ROWMA_SERVER_URL=http://localhost:3000 rosrun rowma_ros rowma
-```
-
-For more information about ConnectionManager, check [the repository](https://github.com/rowma/rowma).
+Caution: your robot will be exposed to the Internet after the rosrun command is successfully executed. For more information, see Other section in this page.
 
 ## Options
-There are some options that can be specified at `rosrun`.
+There are some options that can be specified to `rosrun rowma_ros rowma` through environment variables like this below.
+
+```
+ROWMA_SERVER_URL=http://localhost:3000 ROWMA_DEBUG=True UUID=my-uuid rosrun rowma_ros rowma
+```
 
 |name|value|description|
 |:-|:-|:-|
@@ -63,6 +55,15 @@ There are some options that can be specified at `rosrun`.
 |API_KEY|string|API_KEY can be specified for authentication. This value is used along with an authenticator server specified by ROWMA_SERVER_URL.|
 |ROWMA_SERVER_URL|string|This value describes ConnectionManager URL. The default value is https://rocky-peak-54058.herokuapp.com.|
 |UUID|string|You can use an arbitrary UUID by using this variable.|
+
+## Development
+You can use Docker container when you develop this package.
+
+```sh
+# using Docker
+docker build -t rowma_ros -f Dockerfile .
+docker run --rm --network="host" -e ROWMA_SERVER_URL=http://127.0.0.1 -it rowma_ros
+```
 
 ## Testing
 This ros package is tested on docker images because some functions in `lib.utils` depend on ROS related directory especially `ROS_PACKAGE_PATH`. (`Docker >= 18.09.6`)
@@ -74,11 +75,21 @@ docker run --rm -v `pwd`:/root/my_workspace/src/rowma_ros -it rowma_ros_kinetic_
 docker run --rm -v `pwd`:/root/my_workspace/src/rowma_ros -it rowma_ros_melodic_test
 ```
 
-## Development
-You can use Docker container when you develop this package.
+## Other
+You can specify your own rowma server though, the default rowma server is provided at `https://rowma.moriokalab.com`.
+
+### default server
+The default rowma server is located at `https://rowma.moriokalab.com` as explained above. It is a **public server** without any auth, therefore you should be careful to connect your robot because anyone can run your robot easily. I recommend you to use the default server for experiments.
+
+Do you unhappy your robots to be exposed? See [Rowma.io](https://rowma.io).
+
+### your own rowma server
+You can run your own rowma server (its name is ConnectionManager) to avoid connecting your robot to the public server ([official document](https://rowma.github.io/documentation/en/host-your-network)).
+
+In addition, specify the server address by `ROWMA_SERVER_URL` when you run the node.
 
 ```sh
-# using Docker
-docker build -t rowma_ros -f Dockerfile .
-docker run --rm --network="host" -e ROWMA_SERVER_URL=http://127.0.0.1 -it rowma_ros
+ROWMA_SERVER_URL=http://localhost:3000 rosrun rowma_ros rowma
 ```
+
+For more information about ConnectionManager, check [the repository](https://github.com/rowma/rowma).
