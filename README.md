@@ -16,12 +16,14 @@ Check [the rowma main repository](https://github.com/rowma/rowma) for more infor
 * ROS1
 
 ## Install
+Run this command, then cli installer starts.
+
 ```sh
 python <(curl "https://raw.githubusercontent.com/rowma/rowma_ros/master/install.py" -s -N)
 ```
 
 ### Manual installation
-You can install `rowma_ros` manually if you fail the installation from `rowma/rowma_ros/install.py`.
+You can install `rowma_ros` manually if you fail the installation by the above command.
 
 ```sh
 cd ~/catkin_ws/src
