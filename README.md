@@ -15,9 +15,7 @@ Check [the rowma main repository](https://github.com/rowma/rowma) for more infor
 * Python2.7
 * ROS1
 
-## Usage
-Just run `rosrun rowma_ros rowma` and you will get UUID when it successfully connects to the rowma server. You can specify your own rowma server though, the default rowma server is provided at `18.176.1.219`.
-
+## Install
 ```sh
 python <(curl "https://raw.githubusercontent.com/rowma/rowma_ros/master/install.py" -s -N)
 ```
@@ -31,6 +29,12 @@ git clone https://github.com/asmsuechan/rowma_ros
 cd rowma_ros
 pip install -r requirements.txt
 catkin_make
+```
+
+## Usage
+Just run `rosrun rowma_ros rowma` and you will get UUID when it successfully connects to the rowma server. You can specify your own rowma server though, the default rowma server is provided at `18.176.1.219`.
+
+```
 rosrun rowma_ros rowma
 ```
 
