@@ -22,7 +22,8 @@ Run this command, then cli installer starts.
 python <(curl "https://raw.githubusercontent.com/rowma/rowma_ros/master/install.py" -s -N)
 ```
 
-### Manual installation
+<details><summary>Manual installation</summary>
+<p>
 You can install `rowma_ros` manually if you fail the installation by the above command.
 
 ```sh
@@ -32,6 +33,8 @@ cd rowma_ros
 pip install -r requirements.txt
 catkin_make
 ```
+</p>
+</details>
 
 ## Usage
 Just run `rosrun rowma_ros rowma` and you will get UUID when it successfully connects to the rowma server.
