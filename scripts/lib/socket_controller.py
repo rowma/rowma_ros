@@ -77,6 +77,12 @@ class SocketController:
                 if output == '' and process.poll() is not None:
                     break
                 if output:
+                    msg = {
+                            "cmd": data.get('command').replace(" ", "-"),
+                            "robotUuid": self.id,
+                            "log": output.strip(),
+                          }
+                    self.sio.emit('roslaunch_log', json.dumps(msg), namespace=self.nms)
                     print(output.strip())
             process.poll()
 
@@ -101,6 +107,12 @@ class SocketController:
                 if output == '' and process.poll() is not None:
                     break
                 if output:
+                    msg = {
+                            "cmd": data.get('command').replace(" ", "-"),
+                            "robotUuid": self.id,
+                            "log": output.strip(),
+                          }
+                    self.sio.emit('rosrun_log', json.dumps(msg), namespace=self.nms)
                     print(output.strip())
             process.poll()
 
