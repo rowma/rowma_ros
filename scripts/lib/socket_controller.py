@@ -3,7 +3,7 @@ import ast
 import time
 import json
 import sys
-from subprocess import Popen
+from subprocess import Popen, PIPE
 import rosnode
 import rospkg
 
@@ -59,8 +59,8 @@ class SocketController:
     def run_launch(self, data):
         launch_commands = utils.list_launch_commands()
         if data.get('command') in launch_commands:
-            cmd = 'roslaunch ' + data.get('command')
-            Popen(cmd.split())
+            cmd = 'PYTHONUNBUFFERED=false roslaunch ' + data.get('command')
+            process = Popen(cmd, shell=True, stdout=PIPE)
 
             # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
             # Therefore, sleep is neccessary to wait it finishes to launch.
@@ -72,11 +72,19 @@ class SocketController:
                 }
             self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
 
+            while True:
+                output = process.stdout.readline()
+                if output == '' and process.poll() is not None:
+                    break
+                if output:
+                    print(output.strip())
+            process.poll()
+
     def run_rosrun(self, data):
     	rosrun_commands = utils.list_rosorun_commands()
     	if data.get('command') in rosrun_commands:
-    	    cmd = 'rosrun ' + data.get('command') + ' ' + data.get('args')
-            Popen(cmd.split())
+    	    cmd = 'PYTHONUNBUFFERED=false rosrun ' + data.get('command') + ' ' + data.get('args')
+            process = Popen(cmd, shell=True, stdout=PIPE)
 
     	    # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
     	    # Therefore, sleep is neccessary to wait it finishes to launch.
@@ -87,6 +95,14 @@ class SocketController:
                 'rostopics': utils.list_rostopics()
     	        }
     	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
+
+            while True:
+                output = process.stdout.readline()
+                if output == '' and process.poll() is not None:
+                    break
+                if output:
+                    print(output.strip())
+            process.poll()
 
     def kill_rosnodes(self, data):
         rosnode.kill_nodes(data.get('rosnodes'))
