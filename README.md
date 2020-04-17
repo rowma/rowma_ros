@@ -8,8 +8,7 @@
 ## About
 This package is responsible for **WebSocket** connection and is a WebSocket client to operate a ros-based robot.
 
-### rowma repository
-Check [the rowma main repository](https://github.com/rowma/rowma) for more information to utilize rowma.
+[[rowma/rowma](https://github.com/rowma/rowma)] [[Document](https://rowma.github.io/documentation/en/rowma-ros-overview)]
 
 ## Requirements
 * Python2.7
@@ -43,7 +42,7 @@ Just run `rosrun rowma_ros rowma` and you will get UUID when it successfully con
 rosrun rowma_ros rowma
 ```
 
-Caution: your robot will be exposed to the Internet after the rosrun command is successfully executed. For more information, see Other section in this page.
+**Caution**: your robot will be exposed to the Internet after the rosrun command is successfully executed. For more information, see Other section in this page.
 
 ## Options
 There are some options that can be specified to `rosrun rowma_ros rowma` through environment variables like this below.
@@ -96,3 +95,6 @@ ROWMA_SERVER_URL=http://localhost:3000 rosrun rowma_ros rowma
 ```
 
 For more information about ConnectionManager, check [the repository](https://github.com/rowma/rowma).
+
+## License
+The GPL License (GPL) 2020 - rowma project. Please have a look at the LICENSE.md for more details.
