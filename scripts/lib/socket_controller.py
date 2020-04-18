@@ -140,22 +140,26 @@ class SocketController:
     	self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
 
     def add_script(self, data):
-        script = data.get('script')
-        name = data.get('name')
-        current_path = os.path.dirname(os.path.realpath(__file__))
-        file_path = os.path.join(current_path, "../" + name)
-        file = open(file_path, 'w')
-        file.write(script)
-        file.close()
+        enable_script_download = os.getenv('ENABLE_SCRIPT_DOWNLOAD')
+        if enable_script_download:
+            script = data.get('script')
+            name = data.get('name')
+            current_path = os.path.dirname(os.path.realpath(__file__))
+            file_path = os.path.join(current_path, "../" + name)
+            file = open(file_path, 'w')
+            file.write(script)
+            file.close()
 
-        cmd = 'chmod +x ' + file_path
-        process = Popen(cmd, shell=True, stdout=PIPE)
+            cmd = 'chmod +x ' + file_path
+            process = Popen(cmd, shell=True, stdout=PIPE)
 
-    	msg = {
-    	    'uuid': self.id,
-            'rosrunCommands': utils.list_rosorun_commands()
-    	    }
-    	self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
+    	    msg = {
+    	        'uuid': self.id,
+                'rosrunCommands': utils.list_rosorun_commands()
+    	        }
+    	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
+        else:
+            utils.print_error("You have to set ENABLE_SCRIPT_DOWNLOAD if you use script download.")
 
     def signal_handler(self):
         self.sio.disconnect()
