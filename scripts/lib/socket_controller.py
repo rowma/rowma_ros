@@ -139,6 +139,24 @@ class SocketController:
     	    }
     	self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
 
+    def add_script(self, data):
+        script = data.get('script')
+        name = data.get('name')
+        current_path = os.path.dirname(os.path.realpath(__file__))
+        file_path = os.path.join(current_path, "../" + name)
+        file = open(file_path, 'w')
+        file.write(script)
+        file.close()
+
+        cmd = 'chmod +x ' + file_path
+        process = Popen(cmd, shell=True, stdout=PIPE)
+
+    	msg = {
+    	    'uuid': self.id,
+            'rosrunCommands': utils.list_rosorun_commands()
+    	    }
+    	self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
+
     def signal_handler(self):
         self.sio.disconnect()
         sys.exit(0)

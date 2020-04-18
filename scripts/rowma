@@ -80,6 +80,10 @@ def on_message(data):
 def on_message(data):
     sc.unsubscribe_rostopic(data)
 
+@sio.on('add_script', namespace=nms)
+def on_message(data):
+    sc.add_script(data)
+
 @sio.event(namespace=nms)
 def disconnect():
     sc.set_reconnection(True)
