@@ -1,0 +1,5 @@
+topic_destinations:
+  - destination: xxxx-xxxx-xxxx
+    topic: /hoge
+  - destination: xxxx-xxxx-xxxx
+    topic: /fuga

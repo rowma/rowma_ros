@@ -2,6 +2,7 @@ import path
 import re
 import os
 import subprocess as sp
+import yaml
 
 # Description: Shape path to roslaunch available command.
 # @param: path <string> '/dir/package_name/launch/package.launch'
@@ -104,3 +105,20 @@ def print_debug(msg):
 
 def exit_error(err_msg):
     sys.exit(bcolors.FAIL + err_msg + bcolors.ENDC)
+
+def config_file_path(args, cwd):
+    if len(args) > 1:
+        file_name = args[1]
+        if os.path.isfile(file_name): # Handling absolute path
+            return file_name
+    else:
+        file_name = 'rowma.yml'
+
+    return os.path.join(cwd, file_name)
+
+def get_subscribers_from_yaml(yaml_path):
+    if os.path.isfile(yaml_path):
+        stream = open(yaml_path, 'r')
+        return yaml.safe_load(stream).get('topic_destinations')
+    else: # Without configuration yaml file
+        return []

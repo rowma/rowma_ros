@@ -6,6 +6,7 @@ from rosbridge_library.rosbridge_protocol import RosbridgeProtocol
 import signal
 import os
 import logging
+import sys
 
 from lib import logging_handler
 from lib import utils
@@ -42,7 +43,10 @@ if os.environ.get('API_KEY'):
 else:
     nms = '/rowma'
 
-sc = socket_controller.SocketController('', [], sio, nms)
+yaml_path = utils.config_file_path(sys.argv, os.getcwd())
+subscribers = utils.get_subscribers_from_yaml(yaml_path)
+
+sc = socket_controller.SocketController('', subscribers, sio, nms)
 
 @sio.event(namespace=nms)
 def connect():
