@@ -7,6 +7,11 @@ import signal
 import os
 import logging
 import sys
+import roslib
+import rostopic
+from fluent import sender
+import time
+import json
 
 from lib import logging_handler
 from lib import utils
@@ -48,10 +53,31 @@ subscribers = utils.get_subscribers_from_yaml(yaml_path)
 
 sc = socket_controller.SocketController('', subscribers, sio, nms)
 
+def subscriber_callback(data, topic_name):
+    logger = sender.FluentSender('app')
+    cur_time = int(time.time())
+    log_params = {
+            'uuid': sc.id,
+            'topic': topic_name,
+            'msg': json.dumps(data.data)
+            }
+    if not logger.emit_with_time('rowma_received_rostopic', cur_time, log_params):
+        utils.print_error(logger.last_error)
+        logger.clear_last_error()
+
+if os.environ.get('ROWMA_FLUENTD_ENABLED'):
+    fluentd_stream_topics = utils.get_fluentd_stream_topics(yaml_path)
+    for topic in fluentd_stream_topics:
+        data_type = rostopic.get_topic_type(topic.get('topic'), blocking=False)[0]
+        data_class = rospy.AnyMsg
+        if data_type:
+              data_class = roslib.message.get_message_class(data_type)
+        rospy.Subscriber(topic.get('topic'), data_class, subscriber_callback, callback_args=topic.get('topic'))
+
 @sio.event(namespace=nms)
 def connect():
     sc.connect()
-    sc.set_reconnection(False)
+    sc.set_reconnecting(False)
 
 @sio.on('robot_registered', namespace=nms)
 def on_message(data):
@@ -90,7 +116,7 @@ def on_message(data):
 
 @sio.event(namespace=nms)
 def disconnect():
-    sc.set_reconnection(True)
+    sc.set_reconnecting(True)
 
 def signal_handler(sig, frame):
     sc.signal_handler()

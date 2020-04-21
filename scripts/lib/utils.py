@@ -119,10 +119,21 @@ def config_file_path(args, cwd):
 
     return os.path.join(cwd, file_name)
 
-def get_subscribers_from_yaml(yaml_path):
-    subscribers = []
+def _load_config(yaml_path):
+    config = {}
     if os.path.isfile(yaml_path):
         stream = open(yaml_path, 'r')
-        subscribers = yaml.safe_load(stream).get('topic_destinations')
-        print_success("Config file was loaded from: " + yaml_path)
+        config = yaml.safe_load(stream)
+    return config
+
+def get_subscribers_from_yaml(yaml_path):
+    config = _load_config(yaml_path)
+    subscribers = config.get('topic_destinations')
+    print_success("Subscribers were loaded." + subscribers)
     return subscribers
+
+def get_fluentd_stream_topics(yaml_path):
+    config = _load_config(yaml_path)
+    stream_topics = config.get('fluentd_stream_topics')
+    print_success("Fluentd stream topics were loaded." + stream_topics)
+    return stream_topics

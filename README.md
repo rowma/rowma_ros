@@ -58,6 +58,15 @@ ROWMA_SERVER_URL=http://localhost:3000 ROWMA_DEBUG=True UUID=my-uuid rosrun rowm
 |ROWMA_SERVER_URL|string|This value describes ConnectionManager URL. The default value is https://rocky-peak-54058.herokuapp.com.|
 |UUID|string|You can use an arbitrary UUID by using this variable.|
 
+## With Fluentd
+`rowma_ros` emits rostopic messages which is spcecified in `rowma.yml` to fluentd.
+
+(Write Later)
+
+```
+docker run -it --rm -p 24224:24224 -p 24224:24224/udp -v `pwd`:/fluentd/etc fluentd -c /fluentd/etc/td-agent.conf -v
+```
+
 ## Development
 You can use Docker container when you develop this package.
 

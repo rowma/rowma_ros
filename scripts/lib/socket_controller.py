@@ -15,7 +15,7 @@ class SocketController:
         self.subscribers = subscribers
         self.sio = sio
         self.nms = nms
-        self.reconnection = False
+        self.reconnecting = False
 
     def connect(self):
         ros_root = rospkg.get_ros_root()
@@ -34,7 +34,7 @@ class SocketController:
                 'rosrun_commands': rosrun_commands,
                 'rowma_ros_version': rowma_ros_version,
                 'rostopics': rostopics,
-                'reconnection': self.reconnection
+                'reconnection': self.reconnecting
                 }
 
         api_key = os.environ.get('API_KEY')
@@ -179,5 +179,5 @@ class SocketController:
             msg['sourceUuid'] = self.id
             self.sio.emit('topic_from_ros', json.dumps(msg), namespace=self.nms)
 
-    def set_reconnection(self, reconnection):
-        self.reconnection = reconnection
+    def set_reconnecting(self, reconnecting):
+        self.reconnecting = reconnecting
