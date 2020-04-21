@@ -17,7 +17,7 @@ from lib import logging_handler
 from lib import utils
 from lib import socket_controller
 
-if os.environ.get('ROWMA_DEBUG'):
+if os.environ.get('ROWMA_DEBUG', False):
     log_level = logging.DEBUG
     rospy_log_level = rospy.DEBUG
 else:
@@ -54,7 +54,9 @@ subscribers = utils.get_subscribers_from_yaml(yaml_path)
 sc = socket_controller.SocketController('', subscribers, sio, nms)
 
 def subscriber_callback(data, topic_name):
-    logger = sender.FluentSender('app')
+    host = os.environ.get('ROWMA_FLUENTD_HOST', 'localhost')
+    port = os.environ.get('ROWMA_FLUENTD_PORT', 24224)
+    logger = sender.FluentSender('app', host=host, port=port)
     cur_time = int(time.time())
     log_params = {
             'uuid': sc.id,
@@ -65,7 +67,7 @@ def subscriber_callback(data, topic_name):
         utils.print_error(logger.last_error)
         logger.clear_last_error()
 
-if os.environ.get('ROWMA_FLUENTD_ENABLED'):
+if os.environ.get('ROWMA_FLUENTD_ENABLED', False):
     fluentd_stream_topics = utils.get_fluentd_stream_topics(yaml_path)
     for topic in fluentd_stream_topics:
         data_type = rostopic.get_topic_type(topic.get('topic'), blocking=False)[0]
@@ -126,7 +128,7 @@ def outgoing_func(message):
 
 protocol.outgoing = outgoing_func
 
-server_url = os.environ.get('ROWMA_SERVER_URL') or 'https://rowma.moriokalab.com'
+server_url = os.environ.get('ROWMA_SERVER_URL', 'https://rowma.moriokalab.com')
 sio.connect(server_url)
 signal.signal(signal.SIGINT, signal_handler)
 signal.pause()
