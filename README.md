@@ -51,12 +51,15 @@ There are some options that can be specified to `rosrun rowma_ros rowma` through
 ROWMA_SERVER_URL=http://localhost:3000 ROWMA_DEBUG=True UUID=my-uuid rosrun rowma_ros rowma
 ```
 
-|name|value|description|
-|:-|:-|:-|
-|ROWMA_DEBUG|boolean|Debug logs are shown if you set this value as True.|
-|API_KEY|string|API_KEY can be specified for authentication. This value is used along with an authenticator server specified by ROWMA_SERVER_URL.|
-|ROWMA_SERVER_URL|string|This value describes ConnectionManager URL. The default value is https://rocky-peak-54058.herokuapp.com.|
-|UUID|string|You can use an arbitrary UUID by using this variable.|
+|name|value|default|description|
+|:-|:-|:-|:-|
+|ROWMA_DEBUG|boolean|False|Debug logs are shown if you set this value as True.|
+|API_KEY|string|None|API_KEY can be specified for authentication. This value is used along with an authenticator server specified by ROWMA_SERVER_URL.|
+|ROWMA_SERVER_URL|string|https://rowma.moriokalab.com|This value describes ConnectionManager URL.|
+|UUID|string|None|You can set an arbitrary UUID by using this variable.|
+|ROWMA_FLUENTD_ENABLED|boolean|False|We support fluentd to emit rostopic  data. Set True to enable fluentd emission.|
+|ROWMA_FLUENTD_HOST|string|localhost|You can specify your fluentd's host name.|
+|ROWMA_FLUENTD_PORT|number|24224|You can specify your fluentd's port number.|
 
 ## With Fluentd
 `rowma_ros` emits rostopic messages which is spcecified in `rowma.yml` to fluentd.
@@ -66,6 +69,29 @@ ROWMA_SERVER_URL=http://localhost:3000 ROWMA_DEBUG=True UUID=my-uuid rosrun rowm
 ```
 docker run -it --rm -p 24224:24224 -p 24224:24224/udp -v `pwd`:/fluentd/etc fluentd -c /fluentd/etc/td-agent.conf -v
 ```
+
+## Configuration file (rowma.yml)
+You can specify topic destinations to other robots or applications by using rowma.yml.
+
+By default, rowma ros tries to find `rowma.yml` from current directory and use it if exists.
+
+Run rosrun command with file path (both absolute path and relative path are supported) if you clearly specify the file.
+
+```sh
+rosrun rowma_ros rowma ./rowma.config.yml
+```
+
+The file has to be this format below:
+
+```yaml
+topic_destinations:
+  - destination: uuid-of-robot-a
+    topic: /topic1
+  - destination: uuid-of-robot-b
+    topic: /topic2
+```
+
+This configuration says that your robot sends received /topic1 to uuid-of-robot-a and /topic2 to uuid-of-robot-b.
 
 ## Development
 You can use Docker container when you develop this package.
