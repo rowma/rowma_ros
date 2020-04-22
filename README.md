@@ -60,6 +60,7 @@ ROWMA_SERVER_URL=http://localhost:3000 ROWMA_DEBUG=True UUID=my-uuid rosrun rowm
 |ROWMA_FLUENTD_ENABLED|boolean|False|We support fluentd to emit rostopic  data. Set True to enable fluentd emission.|
 |ROWMA_FLUENTD_HOST|string|localhost|You can specify your fluentd's host name.|
 |ROWMA_FLUENTD_PORT|number|24224|You can specify your fluentd's port number.|
+|ENABLE_SCRIPT_DOWNLOAD|boolean|False|Any python code will be downloaded and executed as a ROS node in `rowma directory/scripts` if you set this value True.|
 
 ## With Fluentd
 `rowma_ros` emits rostopic messages which is spcecified in `rowma.yml` to fluentd.
