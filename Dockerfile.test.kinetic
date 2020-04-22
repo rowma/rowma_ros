@@ -3,7 +3,7 @@ FROM ros:kinetic
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
     apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116 && \
     apt-get update && \
-    apt-get install python2.7 python-pip python3-pip python-rospy ros-kinetic-rosbridge-server -y && \
+    apt-get install python2.7 python-pip python3-pip python-rospy ros-kinetic-rosbridge-server ros-kinetic-roslint -y && \
     pip install --upgrade pip
 
 COPY . /root/my_workspace/src/rowma_ros
