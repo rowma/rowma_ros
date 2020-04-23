@@ -5,8 +5,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  Eigen3
 )
+find_package(PkgConfig)
+pkg_search_module(Eigen3 REQUIRED eigen3)
 catkin_package(
 )
 
