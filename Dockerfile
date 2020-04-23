@@ -5,7 +5,7 @@ RUN sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
     apt-get update && \
     apt-get install python2.7 python-pip python3-pip -y && \
     pip install --upgrade pip
-RUN apt-get install -y ros-melodic-rosbridge-server ros-melodic-roslint
+RUN apt-get install -y ros-melodic-rosbridge-server
 
 COPY . /root/my_workspace/src/rowma_ros
 
