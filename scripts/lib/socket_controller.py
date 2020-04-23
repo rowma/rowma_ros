@@ -26,7 +26,7 @@ class SocketController:
         launch_commands = utils.list_launch_commands()
         rosrun_commands = utils.list_rosorun_commands()
         rostopics = utils.list_rostopics()
-        uuid = os.environ.get('UUID') or self.id
+        uuid = os.environ.get('UUID', self.id)
         msg = {
                 'uuid': uuid,
                 'launch_commands': launch_commands,
@@ -140,7 +140,7 @@ class SocketController:
     	self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
 
     def add_script(self, data):
-        enable_script_download = os.getenv('ENABLE_SCRIPT_DOWNLOAD')
+        enable_script_download = os.environ.get('ENABLE_SCRIPT_DOWNLOAD', False)
         if enable_script_download:
             script = data.get('script')
             name = data.get('name')

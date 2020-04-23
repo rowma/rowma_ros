@@ -12,6 +12,7 @@ import rostopic
 from fluent import sender
 import time
 import json
+import ast
 
 from lib import logging_handler
 from lib import utils
@@ -49,7 +50,14 @@ else:
     nms = '/rowma'
 
 yaml_path = utils.config_file_path(sys.argv, os.getcwd())
-subscribers = utils.get_subscribers_from_yaml(yaml_path)
+subscribers = utils.get_subscribers_from_yaml(yaml_path) or []
+for subscriber in subscribers:
+    sub = { 'topic': subscriber.get('topic'),
+            'destination': subscriber.get('destination'),
+            'op': 'subscribe'
+          }
+    message = ast.literal_eval(json.dumps(sub))
+    protocol.incoming(json.dumps(sub))
 
 sc = socket_controller.SocketController('', subscribers, sio, nms)
 
@@ -93,7 +101,7 @@ def on_message(data):
 
 @sio.on('rostopic', namespace=nms)
 def on_message(data):
-    utils.print_debug(data)
+    utils.print_debug(json.dumps(data))
     sc.rostopic(data, protocol)
 
 @sio.on('run_launch', namespace=nms)
@@ -124,6 +132,7 @@ def signal_handler(sig, frame):
     sc.signal_handler()
 
 def outgoing_func(message):
+    print(message)
     sc.outgoing_func(message)
 
 protocol.outgoing = outgoing_func

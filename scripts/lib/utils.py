@@ -4,6 +4,7 @@ import os
 import subprocess as sp
 import yaml
 import sys
+import json
 
 # Description: Shape path to roslaunch available command.
 # @param: path <string> '/dir/package_name/launch/package.launch'
@@ -129,11 +130,11 @@ def _load_config(yaml_path):
 def get_subscribers_from_yaml(yaml_path):
     config = _load_config(yaml_path)
     subscribers = config.get('topic_destinations')
-    print_success("Subscribers were loaded." + subscribers)
+    if subscribers: print_success("Subscribers were loaded." + json.dumps(subscribers))
     return subscribers
 
 def get_fluentd_stream_topics(yaml_path):
     config = _load_config(yaml_path)
     stream_topics = config.get('fluentd_stream_topics')
-    print_success("Fluentd stream topics were loaded." + stream_topics)
+    if stream_topics: print_success("Fluentd stream topics were loaded." + json.dumps(stream_topics))
     return stream_topics
