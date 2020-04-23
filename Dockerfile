@@ -13,6 +13,8 @@ SHELL ["/bin/bash", "-c"]
 RUN source /opt/ros/melodic/setup.bash && \
     catkin_init_workspace && \
     git clone https://github.com/leggedrobotics/ros_best_practices /tmp/ros_best_practices && \
+    cd /tmp/ros_best_practices && \
+    git checkout dcc45f537ec9876fcef318fcae435e93fcaf71e1 && \
     mv -f /tmp/ros_best_practices/ros_package_template /root/my_workspace/src/ && \
     cd /root/my_workspace/src/rowma_ros && \
     pip2 install -r requirements.txt && \
