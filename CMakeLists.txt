@@ -6,8 +6,9 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
 )
-find_package(PkgConfig)
-pkg_search_module(Eigen3 REQUIRED eigen3)
+find_package( PkgConfig )
+pkg_check_modules( EIGEN3 REQUIRED eigen3 )
+include_directories( ${EIGEN3_INCLUDE_DIRS} )
 catkin_package(
 )
 
