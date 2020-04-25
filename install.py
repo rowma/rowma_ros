@@ -77,6 +77,7 @@ def clone(workspace_path):
         clone_confirmation = input_function("rowma_ros already exists, do you override it? [y/N] ") or "N"
         if clone_confirmation == "y":
             _clone_into("/tmp/rowma_ros")
+            subprocess.check_call(["rm", "-rf", workspace_path + "/rowma_ros"])
             subprocess.check_call(["mv", "-f", "/tmp/rowma_ros", workspace_path])
         else:
             print_warning("Skipped git clone rowma_ros.")
