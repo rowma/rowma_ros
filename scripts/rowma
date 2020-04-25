@@ -101,7 +101,6 @@ def on_message(data):
 
 @sio.on('rostopic', namespace=nms)
 def on_message(data):
-    utils.print_debug(json.dumps(data))
     sc.rostopic(data, protocol)
 
 @sio.on('run_launch', namespace=nms)
@@ -132,7 +131,6 @@ def signal_handler(sig, frame):
     sc.signal_handler()
 
 def outgoing_func(message):
-    print(message)
     sc.outgoing_func(message)
 
 protocol.outgoing = outgoing_func
