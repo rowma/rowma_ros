@@ -88,9 +88,14 @@ def file_output_subscriber_callback(data, file_output):
     log_params = {
             'uuid': sc.id,
             'topic': file_output[0],
-            'msg': json.dumps(data.data)
+            'msg': json.dumps(data.data),
+            'timestamp': int(time.time())
             }
-    with open(file_output[1], 'a') as f:
+
+    output_path = file_output[1]
+    if os.path.exists(output_path):
+        output_path = os.path.join(os.getcwd(), file_output[1])
+    with open(output_path, 'a') as f:
         f.write(json.dumps(log_params) + "\n")
 
 file_outputs = utils.get_file_outputs(yaml_path) or []
