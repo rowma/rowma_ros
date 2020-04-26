@@ -130,11 +130,17 @@ def _load_config(yaml_path):
 def get_subscribers_from_yaml(yaml_path):
     config = _load_config(yaml_path)
     subscribers = config.get('topic_destinations')
-    if subscribers: print_success("Subscribers were loaded." + json.dumps(subscribers))
+    if subscribers: print_success("Subscribers were loaded.\n" + json.dumps(subscribers))
     return subscribers
 
 def get_fluentd_stream_topics(yaml_path):
     config = _load_config(yaml_path)
     stream_topics = config.get('fluentd_stream_topics')
-    if stream_topics: print_success("Fluentd stream topics were loaded." + json.dumps(stream_topics))
+    if stream_topics: print_success("Fluentd stream topics were loaded.\n" + json.dumps(stream_topics))
     return stream_topics
+
+def get_file_outputs(yaml_path):
+    config = _load_config(yaml_path)
+    file_outputs = config.get('file_outputs')
+    if file_outputs: print_success("FIle outputs were loaded.\n" + json.dumps(file_outputs))
+    return file_outputs

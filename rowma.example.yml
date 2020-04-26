@@ -10,3 +10,7 @@ topic_destinations:
 
 fluentd_stream_topics:
   - topic: /piyo
+
+file_outputs:
+  - topic: /chatter
+    filepath: ./topiclog

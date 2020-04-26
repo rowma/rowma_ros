@@ -61,7 +61,7 @@ for subscriber in subscribers:
 
 sc = socket_controller.SocketController('', subscribers, sio, nms)
 
-def subscriber_callback(data, topic_name):
+def fluentd_subscriber_callback(data, topic_name):
     host = os.environ.get('ROWMA_FLUENTD_HOST', 'localhost')
     port = os.environ.get('ROWMA_FLUENTD_PORT', 24224)
     logger = sender.FluentSender('app', host=host, port=port)
@@ -82,7 +82,24 @@ if os.environ.get('ROWMA_FLUENTD_ENABLED', False):
         data_class = rospy.AnyMsg
         if data_type:
               data_class = roslib.message.get_message_class(data_type)
-        rospy.Subscriber(topic.get('topic'), data_class, subscriber_callback, callback_args=topic.get('topic'))
+        rospy.Subscriber(topic.get('topic'), data_class, fluentd_subscriber_callback, callback_args=topic.get('topic'))
+
+def file_output_subscriber_callback(data, file_output):
+    log_params = {
+            'uuid': sc.id,
+            'topic': file_output[0],
+            'msg': json.dumps(data.data)
+            }
+    with open(file_output[1], 'a') as f:
+        f.write(json.dumps(log_params) + "\n")
+
+file_outputs = utils.get_file_outputs(yaml_path) or []
+for output in file_outputs:
+    data_type = rostopic.get_topic_type(output.get('topic'), blocking=False)[0]
+    data_class = rospy.AnyMsg
+    if data_type:
+          data_class = roslib.message.get_message_class(data_type)
+    rospy.Subscriber(output.get('topic'), data_class, file_output_subscriber_callback, callback_args=(output.get('topic'), output.get('filepath')))
 
 @sio.event(namespace=nms)
 def connect():
