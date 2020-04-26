@@ -13,6 +13,7 @@ from fluent import sender
 import time
 import json
 import ast
+import rospkg
 
 from lib import logging_handler
 from lib import utils
@@ -159,5 +160,11 @@ protocol.outgoing = outgoing_func
 
 server_url = os.environ.get('ROWMA_SERVER_URL', 'https://rowma.moriokalab.com')
 sio.connect(server_url)
+
+r = rospkg.RosPack()
+manifest = r.get_manifest('rowma_ros')
+rowma_ros_version = manifest.version
+utils.print_debug("rowma_ros version " + rowma_ros_version)
+
 signal.signal(signal.SIGINT, signal_handler)
 signal.pause()

@@ -142,5 +142,5 @@ def get_fluentd_stream_topics(yaml_path):
 def get_file_outputs(yaml_path):
     config = _load_config(yaml_path)
     file_outputs = config.get('file_outputs')
-    if file_outputs: print_success("FIle outputs were loaded.\n" + json.dumps(file_outputs))
+    if file_outputs: print_success("File outputs were loaded.\n" + json.dumps(file_outputs))
     return file_outputs
