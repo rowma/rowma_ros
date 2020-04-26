@@ -79,17 +79,28 @@ By default, rowma ros tries to find `rowma.yml` from current directory and use i
 Run rosrun command with file path (both absolute path and relative path are supported) if you clearly specify the file.
 
 ```sh
-rosrun rowma_ros rowma ./rowma.config.yml
+rosrun rowma_ros rowma ./rowma.yml
 ```
 
 The file has to be this format below:
 
 ```yaml
 topic_destinations:
-  - destination: uuid-of-robot-a
-    topic: /topic1
-  - destination: uuid-of-robot-b
-    topic: /topic2
+  - destination:
+      type: robot
+      uuid: abc-abc*
+    topic: /chatter
+  - destination:
+      type: robot
+      uuid: abc-def*
+    topic: /test
+
+fluentd_stream_topics:
+  - topic: /piyo
+
+file_outputs:
+  - topic: /chatter
+    filepath: ./topiclog
 ```
 
 This configuration says that your robot sends received /topic1 to uuid-of-robot-a and /topic2 to uuid-of-robot-b.
