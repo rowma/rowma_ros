@@ -89,7 +89,7 @@ def clone(workspace_path):
 
 def pip_install(workspace_path):
     requirements_txt_pat = os.path.join(workspace_path, "rowma_ros/requirements.txt")
-    pip_args = ["install", "-r", requirements_txt_pat]
+    pip_args = ["install", "--user", "-r", requirements_txt_pat]
     return subprocess.check_call(["pip"] + list(pip_args))
 
 def install_apt_deps():
