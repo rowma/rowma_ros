@@ -52,7 +52,8 @@ def list_launch_commands():
         m = re.match(r'^/opt/ros', path)
         if m:
             break
-        packages += sp.check_output("find " + path + " | grep \'\\.launch\'", shell=True).decode('utf-8').strip().split('\n')
+        # The exit code of grep becomes 1 (this means error) when there are not .launch files in the path. Therefore, || true is needed to avoid subprocess.CalledProcessError.
+        packages += sp.check_output("find " + path + " | grep \'\\.launch\' || true", shell=True).decode('utf-8').strip().split('\n')
     commands = []
     for package_path in packages:
         commands.append(path_to_command(package_path))
