@@ -2,7 +2,6 @@ asyncio==3.4.3
 bson==0.5.8
 fluent-logger==0.9.6
 future==0.17.1
-get==2019.4.13
 msgpack==0.6.2
 mock==3.0.3
 pathtools==0.1.2
