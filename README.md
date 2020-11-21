@@ -27,7 +27,7 @@ You can install `rowma_ros` manually if you fail the installation by the above c
 
 ```sh
 cd ~/catkin_ws/src
-git clone https://github.com/asmsuechan/rowma_ros
+git clone https://github.com/rowma/rowma_ros
 cd rowma_ros
 pip install -r requirements.txt
 catkin_make
