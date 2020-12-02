@@ -15,5 +15,5 @@ socketIO-client==0.7.2
 socketIO-client-nexus==0.7.6
 websocket-client==0.56.0
 websocket-server==0.4
-pillow==6.2.2
+pillow==7.1.0
 rospkg==1.2.8
