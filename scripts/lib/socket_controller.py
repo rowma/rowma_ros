@@ -66,10 +66,10 @@ class SocketController:
             # Therefore, sleep is neccessary to wait it finishes to launch.
             time.sleep(2)
             msg = {
-                'uuid': self.id,
-                'rosnodes': rosnode.get_node_names(),
-                'rostopics': utils.list_rostopics()
-                }
+                    'uuid': self.id,
+                    'rosnodes': rosnode.get_node_names(),
+                    'rostopics': utils.list_rostopics()
+                    }
             self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
 
             while True:
@@ -81,26 +81,26 @@ class SocketController:
                             "cmd": data.get('command').replace(" ", "-"),
                             "robotUuid": self.id,
                             "log": output.strip(),
-                          }
+                            }
                     self.sio.emit('roslaunch_log', json.dumps(msg), namespace=self.nms)
                     print(output.strip())
             process.poll()
 
     def run_rosrun(self, data):
-    	rosrun_commands = utils.list_rosorun_commands()
-    	if data.get('command') in rosrun_commands:
-    	    cmd = 'PYTHONUNBUFFERED=false rosrun ' + data.get('command') + ' ' + data.get('args')
+        rosrun_commands = utils.list_rosorun_commands()
+        if data.get('command') in rosrun_commands:
+            cmd = 'PYTHONUNBUFFERED=false rosrun ' + data.get('command') + ' ' + data.get('args')
             process = Popen(cmd, shell=True, stdout=PIPE)
 
-    	    # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
-    	    # Therefore, sleep is neccessary to wait it finishes to launch.
-    	    time.sleep(2)
-    	    msg = {
-    	        'uuid': self.id,
-    	        'rosnodes': rosnode.get_node_names(),
-                'rostopics': utils.list_rostopics()
-    	        }
-    	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
+            # Note: The launched rosnode-name does not appear the soon after roslaunch is executed.
+            # Therefore, sleep is neccessary to wait it finishes to launch.
+            time.sleep(2)
+            msg = {
+                    'uuid': self.id,
+                    'rosnodes': rosnode.get_node_names(),
+                    'rostopics': utils.list_rostopics()
+                    }
+            self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
 
             while True:
                 output = process.stdout.readline()
@@ -111,7 +111,7 @@ class SocketController:
                             "cmd": data.get('command').replace(" ", "-"),
                             "robotUuid": self.id,
                             "log": output.strip(),
-                          }
+                            }
                     self.sio.emit('rosrun_log', json.dumps(msg), namespace=self.nms)
                     print(output.strip())
             process.poll()
@@ -122,22 +122,22 @@ class SocketController:
         # Therefore, sleep is neccessary to wait it finishes to launch.
         time.sleep(2)
         msg = {
-            'uuid': self.id,
-            'rosnodes': rosnode.get_node_names(),
-            'rostopics': utils.list_rostopics()
-            }
+                'uuid': self.id,
+                'rosnodes': rosnode.get_node_names(),
+                'rostopics': utils.list_rostopics()
+                }
         self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
         print('killed')
 
     def unsubscribe_rostopic(self, data):
         utils.print_debug(data)
         self.subscribers = list(filter(lambda s: s['topic'] != data.get('topic'), self.subscribers))
-    	msg = {
-    	    'uuid': self.id,
-    	    'rosnodes': rosnode.get_node_names(),
-            'rostopics': utils.list_rostopics()
-    	    }
-    	self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
+        msg = {
+                'uuid': self.id,
+                'rosnodes': rosnode.get_node_names(),
+                'rostopics': utils.list_rostopics()
+                }
+        self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
 
     def add_script(self, data):
         enable_script_download = os.environ.get('ENABLE_SCRIPT_DOWNLOAD', False)
@@ -153,11 +153,11 @@ class SocketController:
             cmd = 'chmod +x ' + file_path
             process = Popen(cmd, shell=True, stdout=PIPE)
 
-    	    msg = {
-    	        'uuid': self.id,
-                'rosrunCommands': utils.list_rosorun_commands()
-    	        }
-    	    self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
+            msg = {
+                    'uuid': self.id,
+                    'rosrunCommands': utils.list_rosorun_commands()
+                    }
+            self.sio.emit('update_rosnodes', json.dumps(msg), namespace=self.nms)
         else:
             utils.print_error("You have to set ENABLE_SCRIPT_DOWNLOAD if you use script download.")
 
@@ -168,11 +168,12 @@ class SocketController:
     def outgoing_func(self, message):
         if len(self.subscribers) == 0:
             return
-        destinations = []
         msg = json.loads(message)
         for subscriber in self.subscribers:
             if subscriber['topic'] == msg['topic']:
                 destination = subscriber['destination']
+                if subscriber['alias']:
+                    msg['topic'] = subscriber['alias']
 
         if destination:
             msg['topicDestination'] = destination

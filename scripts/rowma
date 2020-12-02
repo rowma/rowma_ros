@@ -57,6 +57,8 @@ for subscriber in subscribers:
             'destination': subscriber.get('destination'),
             'op': 'subscribe'
           }
+    alias = subscriber.get('alias')
+    if alias: sub.update({ 'alias': alias })
     message = ast.literal_eval(json.dumps(sub))
     protocol.incoming(json.dumps(sub))
 

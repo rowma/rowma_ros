@@ -3,6 +3,7 @@ topic_destinations:
       type: robot
       uuid: abc-abc*
     topic: /chatter
+    alias: /aliased_chatter
   - destination:
       type: robot
       uuid: abc-def*
