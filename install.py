@@ -98,7 +98,7 @@ def install_apt_deps():
     except KeyError:
         exit_error('Set ROS_DISTRO correctly.')
 
-    return subprocess.check_call(["sudo", "apt-get", "install", "ros-" + distro + "-rosbridge-server"])
+    return subprocess.check_call(["sudo", "apt-get", "install", "-y", "ros-" + distro + "-rosbridge-server"])
 
 def catkin_make(workspace_path):
     working_dir = os.path.join(workspace_path, "..")
