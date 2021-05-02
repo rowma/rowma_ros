@@ -174,7 +174,7 @@ class SocketController:
         for subscriber in self.subscribers:
             if subscriber['topic'] == msg['topic']:
                 destination = subscriber['destination']
-                if subscriber['alias']:
+                if subscriber.get('alias'):
                     msg['topic'] = subscriber['alias']
 
         if destination:
