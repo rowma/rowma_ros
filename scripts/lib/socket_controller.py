@@ -52,7 +52,7 @@ class SocketController:
         # TODO: Separate by operation
         if data['op'] == 'subscribe':
             newSubscriber = { 'topic': data['topic'], 'destination': data['topicDestination'] }
-            if data['alias']:
+            if data.get('alias'):
                 newSubscriber.update({ 'alias': data['alias'] })
             self.subscribers.append(newSubscriber)
         message = ast.literal_eval(json.dumps(data))
