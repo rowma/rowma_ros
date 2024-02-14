@@ -180,6 +180,7 @@ class SocketController:
         if destination:
             msg['topicDestination'] = destination
             msg['sourceUuid'] = self.id
+            # msg['topic'] = '/' + self.id + msg['topic'] 
             self.sio.emit('topic_from_ros', json.dumps(msg), namespace=self.nms)
 
     def set_reconnecting(self, reconnecting):
