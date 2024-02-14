@@ -155,7 +155,7 @@ def disconnect():
 def signal_handler(sig, frame):
     sc.signal_handler()
 
-def outgoing_func(message, compression=None):
+def outgoing_func(message, compression="none"):
     sc.outgoing_func(message)
 
 protocol.outgoing = outgoing_func
